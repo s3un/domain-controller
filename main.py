@@ -4,7 +4,7 @@ import datetime
 import whois
 import re
 from modules import logo
-import subprocess as sp
+# import subprocess as sp
 
 logo()
 
