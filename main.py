@@ -3,7 +3,7 @@ import typer
 import datetime
 import whois
 import re
-from dc import logo
+from modules import logo
 import subprocess as sp
 
 logo()
