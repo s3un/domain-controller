@@ -1,12 +1,29 @@
 import requests
 import typer
 import datetime
-import whois
+# import whois
 import re
-from modules import logo
-# import subprocess as sp
 
-logo()
+print("""
+    ██████╗  ██████╗ ███╗   ███╗ █████╗ ██╗███╗   ██╗     ██████╗ ██████╗ ███╗   ██╗████████╗██████╗  ██████╗ ██╗     ██╗     ███████╗██████╗ 
+    ██╔══██╗██╔═══██╗████╗ ████║██╔══██╗██║████╗  ██║    ██╔════╝██╔═══██╗████╗  ██║╚══██╔══╝██╔══██╗██╔═══██╗██║     ██║     ██╔════╝██╔══██╗
+    ██║  ██║██║   ██║██╔████╔██║███████║██║██╔██╗ ██║    ██║     ██║   ██║██╔██╗ ██║   ██║   ██████╔╝██║   ██║██║     ██║     █████╗  ██████╔╝
+    ██║  ██║██║   ██║██║╚██╔╝██║██╔══██║██║██║╚██╗██║    ██║     ██║   ██║██║╚██╗██║   ██║   ██╔══██╗██║   ██║██║     ██║     ██╔══╝  ██╔══██╗
+    ██████╔╝╚██████╔╝██║ ╚═╝ ██║██║  ██║██║██║ ╚████║    ╚██████╗╚██████╔╝██║ ╚████║   ██║   ██║  ██║╚██████╔╝███████╗███████╗███████╗██║  ██║
+    ╚═════╝  ╚═════╝ ╚═╝     ╚═╝╚═╝  ╚═╝╚═╝╚═╝  ╚═══╝     ╚═════╝ ╚═════╝ ╚═╝  ╚═══╝   ╚═╝   ╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚══════╝╚══════╝╚═╝  ╚═╝
+
+    ===============================
+    -- Created By IntelEye. V 1.0
+    ===============================
+    """)
+
+def urla():
+    global url
+    url = input("Enter your domain$ ")
+    if 'https://' or 'http://' not in str(url):
+        pass
+        response = requests.get(url)
+
 
 app = typer.Typer(add_completion=False)
 
@@ -29,8 +46,10 @@ def status_code():
 
 @app.command()
 def who_is():
+    import whois
     now = datetime.datetime.now()
-    page = whois.whois(input("Enter your domain$ "))
+    page = input("Enter your domain$ ")
+    response = whois.whois(page)
     for key, value in page.items():
         print(f"[=]{key} : {value}")
     print("[=]", now.strftime("%Y-%m-%d %H:%M:%S"))
@@ -48,8 +67,8 @@ def ip_lookup():
     p = re.compile(regex)
     p1 = re.compile(regex)
 
-    p2 = re.search(input("Enter your IP Address$ ",))
-    return "Ip address is valid"
+    p2 = re.search(input("Enter your IP Address$ "))
+    print("Ip address is valid")
 
 
 @app.command()
@@ -68,8 +87,13 @@ def builtwith():
     for key, value in page.items():
         frameworks = ",".join(value)
         print(f"[=]{key} : {frameworks}")
-    # for key, value in response.items():
-    #     print(f"[=]{key} : {value}")
+
+
+# def choose_file():
+#     global file
+#     file = input("Enter the file path$ ")
+#     if '.txt'in str(file):
+
 
 if __name__ == "__main__":
     app()
