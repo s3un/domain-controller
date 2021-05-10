@@ -20,7 +20,7 @@ session.proxies = {
 def onionheader():
     domain = input("[+]Enter domain name$ ")
     starter = (typer.style("---------------------------------------------------------------------------------- \n[+] Fetching Header:  """, fg=typer.colors.BLUE))
-    print (starter)
+    print(starter)
     response = session.get(domain)
     ohead = response.headers
     for key, value in ohead.items():

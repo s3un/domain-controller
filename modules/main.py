@@ -66,7 +66,7 @@ def header():
 def builtwith():
     import builtwith
     domain = input("Enter your domain$ ")
-    starter = (typer.style("---------------------------------------------------------------------------------- \n[+] Generating Builtwith Info:  """,fg=typer.colors.BLUE))
+    starter = (typer.style("---------------------------------------------------------------------------------- \n[+] Generating Builtwith Info:  ",fg=typer.colors.BLUE))
     page = builtwith.parse(domain)
     for key, value in page.items():
         frameworks = ",".join(value)
@@ -74,13 +74,19 @@ def builtwith():
 
 @app.command()
 def upload():
-    filepath = input("[+]Enter file path: ")
+    filepath = input("[+]Enter file path$ ")
+    starter = (typer.style("---------------------------------------------------------------------------------- \n[+] Scanning through files:  ",fg=typer.colors.BLUE))
+    print(starter)
     if filepath.endswith('.txt'):
-        file = open(filepath, 'r')
-        for value in file:
-            framework = value[0]
-            response = requests.get(framework)
-            print(f"[+]{value[0]} : ", response.status_code)
+        try:
+            file = open(filepath, 'r')
+            for value in file:
+                framework = value[0]
+                response = requests.get(framework)
+                print(f"[+]{value[0]} : ", response.status_code)
+        except:
+            err = typer.style("[+]This is not a .txt file", fg=typer.colors.RED)
+            typer.echo(err)
     elif filepath.endswith(".csv"):
         with open(filepath, mode='r') as f:
             reader = csv.reader(f, delimiter=',')
