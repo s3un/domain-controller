@@ -14,14 +14,6 @@ session.proxies = {
     'https' : 'socks5h://localhost:9050'
 }
 
-def Onionheader():
-    starter = (typer.style("---------------------------------------------------------------------------------- \n[+] Fetching Header:  """, fg=typer.colors.BLUE))
-    print (starter)
-    #response = session.get(Domain)
-    #ohead = response.headers
-    #for key, value in ohead.items():
-  #      print(f"[+]{key} : {value}")
-
 
 def upload():
     filepath = input("[+]Enter file path$ ")
