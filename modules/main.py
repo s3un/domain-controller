@@ -83,21 +83,21 @@ def upload():
             for value in file:
                 framework = value[0]
                 response = requests.get(framework)
-                print(f"[+]{value[0]} : ", response.status_code)
+                print(f"[+]Domain: {value[0]}  ", response.status_code)
         except:
             err = typer.style("[+]This is not a .txt file", fg=typer.colors.RED)
             typer.echo(err)
     elif filepath.endswith(".csv"):
+        starter = (typer.style("---------------------------------------------------------------------------------- \n[+] Scanning through files:  ",fg=typer.colors.BLUE))
         with open(filepath, mode='r') as f:
             reader = csv.reader(f, delimiter=',')
             for value in reader:
                 framework = value[0]
                 response = requests.get(framework)
-                print(f"[+]{value[0]} : ", response.status_code)
+                print(f"[+]{value[0]}  ", response.status_code)
     else:
         err = typer.style("[+]File format not supported!", fg=typer.colors.RED)
         typer.echo(err)
-
 
 if __name__ == "__main__":
     app()
