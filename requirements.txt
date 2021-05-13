@@ -1,3 +1,5 @@
 requests
 python-whois
 builtwith
+bs4
+os

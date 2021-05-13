@@ -1,8 +1,9 @@
 import requests
-import subprocess as subp
 import os
-import datetime
 import typer
+import csv
+import datetime
+from bs4 import BeautifulSoup
 
 onionapp = typer.Typer(add_completion=False, add_help_option=False)
 
@@ -16,18 +17,20 @@ session.proxies = {
     'https' : 'socks5h://localhost:9050'
 }
 
-@onionapp.command()
+@onionapp.command("oh")
 def onionheader():
     domain = input("[+]Enter domain name$ ")
     starter = (typer.style("---------------------------------------------------------------------------------- \n[+] Fetching Header:  """, fg=typer.colors.BLUE))
     print(starter)
+    now = datetime.datetime.now()
     response = session.get(domain)
     ohead = response.headers
     for key, value in ohead.items():
         print(f"[+]{key} : {value}")
+    print("[+]Timestamp: ", now.strftime("%Y-%m-%d %H:%M:%S"))
+    print(typer.style("----------------------------------------------------------------------------------", fg=typer.colors.BLUE))
 
-
-@onionapp.command()
+@onionapp.command("osc")
 def status_code():
     domain = input("[+]Enter domain name$ ")
     starter = (typer.style("---------------------------------------------------------------------------------- \n[+] Generating Status Code:  """, fg=typer.colors.BLUE))
@@ -44,19 +47,28 @@ def status_code():
         typer.echo(bad)
         typer.echo(page.status_code)
         print("[+]Timestamp: ", now.strftime("%Y-%m-%d %H:%M:%S"))
-    print (typer.style("----------------------------------------------------------------------------------", fg=typer.colors.BLUE))
+    print(typer.style("----------------------------------------------------------------------------------", fg=typer.colors.BLUE))
 
 
-@onionapp.command()
-def builtwith():
-    import builtwith
-    domain = input("[+]Enter your domain$ ")
-    starter = (typer.style("---------------------------------------------------------------------------------- \n[+] Generating Builtwith Info:  """,fg=typer.colors.BLUE))
-    page = builtwith.parse(domain)
-    for key, value in page.items():
-        frameworks = ",".join(value)
-        print(f"[=]{key} : {frameworks}")
-
+@onionapp.command("ou")
+def upload():
+    filepath = input("[+]Enter file path$ ")
+    starter = (typer.style("---------------------------------------------------------------------------------- \n[+] Scanning through rows:  ",fg=typer.colors.BLUE))
+    print(starter)
+    if filepath.endswith(".csv"):
+        with open(filepath, mode='r') as f:
+            reader = csv.reader(f, delimiter=',')
+            for value in reader:
+                framework = value[0]
+                response = session.get(framework)
+                grab = BeautifulSoup(response.text, "html.parser")
+                title = grab.title
+                gtitle = title.string
+                print(f"[+]Domain: {value[0]}\n[+]Title: {gtitle} \n[+]Status code: ", response.status_code, "\n")
+    else:
+        err = typer.style("[+]File format not supported!", fg=typer.colors.RED)
+        typer.echo(err)
+    print(typer.style("----------------------------------------------------------------------------------", fg=typer.colors.BLUE))
 
 if __name__ == "__main__":
     onionapp()
