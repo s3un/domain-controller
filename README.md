@@ -24,5 +24,5 @@ Ensure tor service is running to get information on dark web links.
 
 
 EXAMPLE
-run python dc.py to view all available commands 
-run python3 dc.py h[argument]
+- run python dc.py to view all available commands 
+- run python3 dc.py h[argument]
