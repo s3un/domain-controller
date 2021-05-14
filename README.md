@@ -8,7 +8,7 @@ HOW TO INSTALL?
 - git clone https://github.com/s3un/domain-controller
 - cd domain-controller 
 - python3 install requirements.txt
-- upon successful isntallation 
+- upon successful installation 
 - run python3 dc.py [argument]
 
 FUNCTIONALITIES
