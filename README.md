@@ -17,3 +17,7 @@ FUNCTIONALITIES
 - Retrieves clear web / dark web domain header information 
 - Whois information for clear web domain
 - Builtwith information for clear web
+
+
+COMMON PROBLEM
+Ensure tor service is running to get information on dark web links.
