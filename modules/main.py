@@ -4,7 +4,6 @@ import datetime
 import csv
 from bs4 import BeautifulSoup
 import os
-from modules.onion import onionapp
 
 
 app = typer.Typer(add_completion=False)
@@ -72,7 +71,7 @@ def header():
 @app.command("b")
 def builtwith(clearweb: str = typer.Option("", help = "Clearweb")):
     """
-    - Provides built with information
+    - Provides domain built with information
     """
     import builtwith
     clearweb = input("Enter your domain$ ")
@@ -87,7 +86,7 @@ def builtwith(clearweb: str = typer.Option("", help = "Clearweb")):
 @app.command("u")
 def upload():
     """
-    - Scans multiple urls in a .csv file
+    - Scans multiple clear web domain in a .csv file
     """
     filepath = input("[+]Enter file path$ ")
     if filepath.endswith(".csv"):
@@ -106,7 +105,7 @@ def upload():
 @app.command("oh")
 def onionheader():
     """
-    - Onion url header information
+    - Onion domain header information
     """
     domain = input("[+]Enter domain name$ ")
     starter = (typer.style("---------------------------------------------------------------------------------- \n[+] Fetching Header:  """, fg=typer.colors.BLUE))
@@ -132,10 +131,14 @@ def status_code():
     print(starter)
     now = datetime.datetime.now()
     page = session.get(domain)
+    grab = BeautifulSoup(page.text, "html.parser")
+    title = grab.title
+    gtitle = title.string
     if page.status_code == 200:
         good = typer.style("[=]The request has succeeded and the domain is reachable", fg=typer.colors.GREEN)
         typer.echo(good)
         print("[+]Status Code: ", page.status_code)
+        print(f"[+]Title: {gtitle}")
         print("[+]Timestamp: ", now.strftime("%Y-%m-%d %H:%M:%S"))
     else:
         bad = typer.style("[+] This domain is currently not reachable", fg=typer.colors.RED)
@@ -148,7 +151,7 @@ def status_code():
 @app.command("ou")
 def upload():
     """
-    - Scans multiple urls in a .csv file and retrieve title info
+    - Scans multiple onion domains in a .csv file
     """
     filepath = input("[+]Enter file path$ ")
     starter = (typer.style("---------------------------------------------------------------------------------- \n[+] Scanning through rows:  ",fg=typer.colors.BLUE))
