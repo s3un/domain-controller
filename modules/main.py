@@ -4,6 +4,7 @@ import datetime
 import csv
 from bs4 import BeautifulSoup
 import os
+import time
 
 
 app = typer.Typer(add_completion=False)
@@ -18,15 +19,25 @@ session.proxies = {
     'https' : 'socks5h://localhost:9050'
 }
 
+R = '\033[31m' # red
+G = '\033[32m' # green
+C = '\033[36m' # cyan
+W = '\033[0m' # white
+
+
 @app.command("sc")
 def status_code():
     """
     - Clearweb domain status check
     """
     now = datetime.datetime.now()
-    domain = input("Enter domain name$ ")
-    starter = (typer.style("---------------------------------------------------------------------------------- \n[+] Generating Status Code:  """,fg=typer.colors.BLUE))
-    page = requests.get(domain)
+    domain = input(G + '[+]' + C +"Enter domain name$ " + W)
+    ios = typer.style("---------------------------------------------------------------------------------- \n[+] Generating Status Code:  """,fg=typer.colors.BLUE)
+    typer.echo(ios)
+    if 'https://' in domain:
+        page = requests.get(domain)
+    else:
+        page = requests.get('https://' + domain)
     if page.status_code == 200:
         good = typer.style("[+]The request has succeeded and the domain is reachable", fg=typer.colors.GREEN)
         typer.echo(good)
@@ -37,7 +48,9 @@ def status_code():
         typer.echo(bad)
         typer.echo(page.status_code)
         print("[+]Timestamp: ", now.strftime("%Y-%m-%d %H:%M:%S"))
-    print(typer.style("----------------------------------------------------------------------------------",fg=typer.colors.BLUE))
+    io = typer.style("----------------------------------------------------------------------------------",fg=typer.colors.BLUE)
+    typer.echo(io)
+
 
 @app.command("w")
 def who_is():
@@ -46,41 +59,57 @@ def who_is():
     """
     import whois
     now = datetime.datetime.now()
-    domain = input("Enter your domain$ ")
-    starter = (typer.style("---------------------------------------------------------------------------------- \n[+] Generating Whois Info:  """,fg=typer.colors.BLUE))
-    response = whois.whois(domain)
+    domain = input(G + '[+]' + C + "Enter your domain$ " + W)
+    ios = typer.style("---------------------------------------------------------------------------------- \n[+] Generating Whois Info...:  """,fg=typer.colors.BLUE)
+    typer.echo(ios)
+    if 'https://' in domain:
+        response = whois.whois(domain)
+    else:
+        response = whois.whois('https://' + domain)
     for key, value in response.items():
         print(f"[+]{key} : {value}")
     print("[+]", now.strftime("%Y-%m-%d %H:%M:%S"))
-    print(typer.style("----------------------------------------------------------------------------------",fg=typer.colors.BLUE))
+    io = typer.style("----------------------------------------------------------------------------------",fg=typer.colors.BLUE)
+    typer.echo(io)
+
 
 @app.command("h")
 def header():
     """
     - Provides domain header information
     """
-    domain = input("Enter your domain$ ")
-    starter = (typer.style("---------------------------------------------------------------------------------- \n[+] Fetching Header:  """,fg=typer.colors.BLUE))
-    response = requests.get(domain)
-    hea = response.headers
+    domain = input(G + '[+]' + C + "Enter your domain$ " + W)
+    ios = typer.style("---------------------------------------------------------------------------------- \n[+] Generating header info..:  """,fg=typer.colors.BLUE)
+    typer.echo(ios)
+    if 'https://' in domain:
+        page = requests.get(domain)
+    else:
+        page = requests.get('https://' + domain)
+    hea = page.headers
     for key, value in hea.items():
         print(f"[+]{key} : {value}")
-    print(typer.style("----------------------------------------------------------------------------------", fg=typer.colors.BLUE))
+    io = typer.style("----------------------------------------------------------------------------------",fg=typer.colors.BLUE)
+    typer.echo(io)
 
 
 @app.command("b")
-def builtwith(clearweb: str = typer.Option("", help = "Clearweb")):
+def builtwith():
     """
     - Provides domain built with information
     """
     import builtwith
-    clearweb = input("Enter your domain$ ")
-    starter = (typer.style("---------------------------------------------------------------------------------- \n[+] Generating Builtwith Info:  ",fg=typer.colors.BLUE))
-    page = builtwith.parse(clearweb)
+    clearweb = input(G + '[+]' + C + "Enter your domain$ " + W)
+    ios = typer.style("---------------------------------------------------------------------------------- \n[+] Generating built with info...:  """,fg=typer.colors.BLUE)
+    typer.echo(ios)
+    if 'https://' in clearweb:
+        page = builtwith.parse(clearweb)
+    else:
+        page = builtwith.parse('https://' + clearweb)
     for key, value in page.items():
         frameworks = ",".join(value)
         print(f"[=]{key} : {frameworks}")
-    print(typer.style("----------------------------------------------------------------------------------", fg=typer.colors.BLUE))
+    io = typer.style("----------------------------------------------------------------------------------",fg=typer.colors.BLUE)
+    typer.echo(io)
 
 
 @app.command("u")
@@ -88,9 +117,10 @@ def upload():
     """
     - Scans multiple clear web domain in a .csv file
     """
-    filepath = input("[+]Enter file path$ ")
+    filepath = input(G + '[+]' + C +"Enter file path$ " + W)
     if filepath.endswith(".csv"):
-        starter = (typer.style("---------------------------------------------------------------------------------- \n[+] Scanning through files:  ",fg=typer.colors.BLUE))
+        ios = typer.style("---------------------------------------------------------------------------------- \n[+] Scanning through files:  """,fg=typer.colors.BLUE)
+        typer.echo(ios)
         with open(filepath, mode='r') as f:
             reader = csv.reader(f, delimiter=',')
             for value in reader:
@@ -100,16 +130,18 @@ def upload():
     else:
         err = typer.style("[+]File format not supported!", fg=typer.colors.RED)
         typer.echo(err)
-    print(typer.style("----------------------------------------------------------------------------------",fg=typer.colors.BLUE))
+    io = typer.style("----------------------------------------------------------------------------------",fg=typer.colors.BLUE)
+    typer.echo(io)
+
 
 @app.command("oh")
 def onionheader():
     """
     - Onion domain header information
     """
-    domain = input("[+]Enter domain name$ ")
-    starter = (typer.style("---------------------------------------------------------------------------------- \n[+] Fetching Header:  """, fg=typer.colors.BLUE))
-    print(starter)
+    domain = input(G + '[+]' + C + "Enter domain name$ " + W)
+    ios = typer.style("---------------------------------------------------------------------------------- \n[+] Generating header info...:  """,fg=typer.colors.BLUE)
+    typer.echo(ios)
     if not ".onion" in domain:
         print(f"[+]{domain} = Not a valid onion link")
     else:
@@ -119,33 +151,38 @@ def onionheader():
         for key, value in ohead.items():
             print(f"[+]{key} : {value}")
         print("[+]Timestamp: ", now.strftime("%Y-%m-%d %H:%M:%S"))
-        print(typer.style("----------------------------------------------------------------------------------", fg=typer.colors.BLUE))
+    io = typer.style("----------------------------------------------------------------------------------",fg=typer.colors.BLUE)
+    typer.echo(io)
+
 
 @app.command("osc")
 def status_code():
     """
     - Onion domain status check
     """
-    domain = input("[+]Enter domain name$ ")
-    starter = (typer.style("---------------------------------------------------------------------------------- \n[+] Generating Status Code:  """, fg=typer.colors.BLUE))
-    print(starter)
+    domain = input(G + '[+]' + C +"Enter domain name$ " + W)
+    ios = typer.style("---------------------------------------------------------------------------------- \n[+] Generating Status Code:  """,fg=typer.colors.BLUE)
+    typer.echo(ios)
     now = datetime.datetime.now()
-    page = session.get(domain)
-    grab = BeautifulSoup(page.text, "html.parser")
-    title = grab.title
-    gtitle = title.string
+    if 'https://' in domain:
+        page = session.get(domain)
+    else:
+        page = session.get('https://' + domain)
     if page.status_code == 200:
         good = typer.style("[=]The request has succeeded and the domain is reachable", fg=typer.colors.GREEN)
         typer.echo(good)
         print("[+]Status Code: ", page.status_code)
-        print(f"[+]Title: {gtitle}")
         print("[+]Timestamp: ", now.strftime("%Y-%m-%d %H:%M:%S"))
+    elif page.status_code != 200:
+        print("The onion link is currently not reachable")
+        print("[+]Status Code: ", page.status_code)
     else:
         bad = typer.style("[+] This domain is currently not reachable", fg=typer.colors.RED)
         typer.echo(bad)
         typer.echo(page.status_code)
         print("[+]Timestamp: ", now.strftime("%Y-%m-%d %H:%M:%S"))
-    print(typer.style("----------------------------------------------------------------------------------", fg=typer.colors.BLUE))
+    io = typer.style("----------------------------------------------------------------------------------",fg=typer.colors.BLUE)
+    typer.echo(io)
 
 
 @app.command("ou")
@@ -153,9 +190,9 @@ def upload():
     """
     - Scans multiple onion domains in a .csv file
     """
-    filepath = input("[+]Enter file path$ ")
-    starter = (typer.style("---------------------------------------------------------------------------------- \n[+] Scanning through rows:  ",fg=typer.colors.BLUE))
-    print(starter)
+    filepath = input(G + '[+]' + C +"Enter file path$ " + W)
+    ios = typer.style("---------------------------------------------------------------------------------- \n[+] Scanning through files:  """,fg=typer.colors.BLUE)
+    typer.echo(ios)
     if filepath.endswith(".csv"):
         with open(filepath, mode='r') as f:
             reader = csv.reader(f, delimiter=',')
@@ -169,7 +206,8 @@ def upload():
     else:
         err = typer.style("[+]File format not supported!", fg=typer.colors.RED)
         typer.echo(err)
-    print(typer.style("----------------------------------------------------------------------------------", fg=typer.colors.BLUE))
+    io = typer.style("----------------------------------------------------------------------------------",fg=typer.colors.BLUE)
+    typer.echo(io)
 
 if __name__ == "__main__":
     app()
